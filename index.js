@@ -11,7 +11,7 @@ app.get("/", (req, res) => {
   res.send("I am running on the home of the Server.");
 });
 
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_USER_PASSWORD}@cluster0.efpjwcu.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
@@ -24,8 +24,17 @@ async function run() {
     const bikesCollections = client
       .db("bikesDatabase")
       .collection("bikesCollection");
+    // get all bikes data from database
     app.get("/allbikes", async (req, res) => {
       const query = {};
+      const cursor = await bikesCollections.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    // get specific bikes category data from database
+    app.get("/allbikes/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
       const cursor = await bikesCollections.find(query);
       const result = await cursor.toArray();
       res.send(result);
