@@ -24,6 +24,7 @@ async function run() {
     const bikesCollections = client
       .db("bikesDatabase")
       .collection("bikesCollection");
+    const usersCollections = client.db("bikesDatabase").collection("users");
     // get all bikes data from database
     app.get("/allbikes", async (req, res) => {
       const query = {};
@@ -35,9 +36,15 @@ async function run() {
     app.get("/allbikes/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
-      const cursor = await bikesCollections.find(query);
-      const result = await cursor.toArray();
+      const result = await bikesCollections.findOne(query);
       res.send(result);
+    });
+    // post users from client to database
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const result = await usersCollections.insertOne(user);
+      console.log(result);
+      res.send();
     });
   } finally {
   }
