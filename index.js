@@ -75,6 +75,13 @@ async function run() {
       console.log(result);
       res.send();
     });
+    // create api for get addproduct data
+    app.get("/dashboard/addproduct", async (req, res) => {
+      const query = {};
+      const result = await addProductCollections.find(query).toArray();
+      console.log(result);
+      res.send(result);
+    });
   } finally {
   }
 }
