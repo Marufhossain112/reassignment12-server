@@ -82,6 +82,13 @@ async function run() {
       console.log(result);
       res.send(result);
     });
+    // create api for delete a  product data
+    app.delete("/dashboard/addproduct/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await addProductCollections.deleteOne(query);
+      res.send(result);
+    });
   } finally {
   }
 }
