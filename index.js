@@ -46,6 +46,12 @@ async function run() {
       console.log(result);
       res.send();
     });
+    // get all users
+    app.get("/users", async (req, res) => {
+      const query = {};
+      const result = await usersCollections.find(query).toArray();
+      res.send(result);
+    });
   } finally {
   }
 }
