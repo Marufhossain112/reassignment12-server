@@ -25,6 +25,9 @@ async function run() {
       .db("bikesDatabase")
       .collection("bikesCollection");
     const usersCollections = client.db("bikesDatabase").collection("users");
+    const addProductCollections = client
+      .db("bikesDatabase")
+      .collection("addproducts");
     // get all bikes data from database
     app.get("/allbikes", async (req, res) => {
       const query = {};
@@ -64,6 +67,13 @@ async function run() {
       const query = { role: "seller" };
       const result = await usersCollections.find(query).toArray();
       res.send(result);
+    });
+    // create api for add a product
+    app.post("/dashboard/addproduct", async (req, res) => {
+      const user = req.body;
+      const result = await addProductCollections.insertOne(user);
+      console.log(result);
+      res.send();
     });
   } finally {
   }
