@@ -28,6 +28,9 @@ async function run() {
     const addProductCollections = client
       .db("bikesDatabase")
       .collection("addproducts");
+    const advertiseProductCollections = client
+      .db("bikesDatabase")
+      .collection("advertiseProducts");
     // get all bikes data from database
     app.get("/allbikes", async (req, res) => {
       const query = {};
@@ -46,8 +49,8 @@ async function run() {
     app.post("/users", async (req, res) => {
       const user = req.body;
       const result = await usersCollections.insertOne(user);
-      console.log(result);
-      res.send();
+      // console.log(result);
+      res.send(result);
     });
     // get all users
     app.get("/users", async (req, res) => {
@@ -72,14 +75,14 @@ async function run() {
     app.post("/dashboard/addproduct", async (req, res) => {
       const user = req.body;
       const result = await addProductCollections.insertOne(user);
-      console.log(result);
-      res.send();
+      // console.log(result);
+      res.send(result);
     });
     // create api for get addproduct data
     app.get("/dashboard/addproduct", async (req, res) => {
       const query = {};
       const result = await addProductCollections.find(query).toArray();
-      console.log(result);
+      // console.log(result);
       res.send(result);
     });
     // create api for delete a  product data
@@ -87,6 +90,27 @@ async function run() {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await addProductCollections.deleteOne(query);
+      res.send(result);
+    });
+    // create api for advertising unsold product
+    app.get("/advertiseproduct/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await addProductCollections.findOne(query);
+      console.log(result);
+      res.send(result);
+    });
+    //create api for advertise data post
+    app.post("/advertiseproduct", async (req, res) => {
+      const user = req.body;
+      const result = await advertiseProductCollections.insertOne(user);
+      console.log(result);
+      res.send(result);
+    });
+    app.get("/advertiseproduct", async (req, res) => {
+      const query = {};
+      const result = await advertiseProductCollections.find(query).toArray();
+      console.log(result);
       res.send(result);
     });
   } finally {
