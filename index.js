@@ -60,15 +60,21 @@ async function run() {
     });
 
     // get all buyers
-    app.get("/users/buyer/", async (req, res) => {
+    app.get("/dashboard/allbuyers/", async (req, res) => {
       const query = { role: "buyer" };
       const result = await usersCollections.find(query).toArray();
       res.send(result);
     });
     // get all seller
-    app.get("/users/seller/", async (req, res) => {
+    app.get("/dashboard/allsellers/", async (req, res) => {
       const query = { role: "seller" };
       const result = await usersCollections.find(query).toArray();
+      res.send(result);
+    });
+    app.delete("/dashboard/allsellers/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await usersCollections.deleteOne(query);
       res.send(result);
     });
     // create api for add a product
