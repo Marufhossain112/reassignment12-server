@@ -65,6 +65,13 @@ async function run() {
       const result = await usersCollections.find(query).toArray();
       res.send(result);
     });
+    // delete a buyer
+    app.delete("/dashboard/allbuyers/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await usersCollections.deleteOne(query);
+      res.send(result);
+    });
     // get all seller
     app.get("/dashboard/allsellers/", async (req, res) => {
       const query = { role: "seller" };
