@@ -31,6 +31,9 @@ async function run() {
     const advertiseProductCollections = client
       .db("bikesDatabase")
       .collection("advertiseProducts");
+    const reportedItemsCollections = client
+      .db("bikesDatabase")
+      .collection("reportedProducts");
     // get all bikes data from database
     app.get("/allbikes", async (req, res) => {
       const query = {};
@@ -143,6 +146,25 @@ async function run() {
       const query = { email };
       const user = await usersCollections.findOne(query);
       res.send({ isBuyer: user?.role === "buyer" });
+    });
+    // api for reported items
+    app.post("/dashboard/reporteditems", async (req, res) => {
+      const user = req.body;
+      const result = await reportedItemsCollections.insertOne(user);
+      console.log(result);
+      res.send(result);
+    });
+    app.get("/dashboard/reporteditems", async (req, res) => {
+      const query = {};
+      const result = await reportedItemsCollections.find(query).toArray();
+      console.log(result);
+      res.send(result);
+    });
+    app.delete("/dashboard/reporteditems/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await reportedItemsCollections.deleteOne(query);
+      res.send(result);
     });
   } finally {
   }
