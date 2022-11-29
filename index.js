@@ -166,6 +166,22 @@ async function run() {
       const result = await reportedItemsCollections.deleteOne(query);
       res.send(result);
     });
+    // get the yamaha collection
+    app.get("/allbikes/brands/yamaha", async (req, res) => {
+      const query = { bikesData: { $elemMatch: { brandName: "Yamaha" } } };
+      const result = await bikesCollections.find(query).toArray();
+      res.send(result);
+    });
+    app.get("/allbikes/brands/kawasaki", async (req, res) => {
+      const query = { bikesData: { $elemMatch: { brandName: "Kawasaki" } } };
+      const result = await bikesCollections.find(query).toArray();
+      res.send(result);
+    });
+    app.get("/allbikes/brands/suzuki", async (req, res) => {
+      const query = { bikesData: { $elemMatch: { brandName: "Suzuki" } } };
+      const result = await bikesCollections.find(query).toArray();
+      res.send(result);
+    });
   } finally {
   }
 }
