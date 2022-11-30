@@ -23,7 +23,7 @@ async function run() {
   try {
     const bikesCollections = client
       .db("bikesDatabase")
-      .collection("bikesCollection");
+      .collection("allBikesCollection");
     const usersCollections = client.db("bikesDatabase").collection("users");
     const addProductCollections = client
       .db("bikesDatabase")
@@ -34,6 +34,15 @@ async function run() {
     const reportedItemsCollections = client
       .db("bikesDatabase")
       .collection("reportedProducts");
+    const yamahaCollections = client
+      .db("bikesDatabase")
+      .collection("yamahaCollection");
+    const kawasakiCollections = client
+      .db("bikesDatabase")
+      .collection("kawasakiCollection");
+    const suzukiCollections = client
+      .db("bikesDatabase")
+      .collection("suzukiCollection");
     // get all bikes data from database
     app.get("/allbikes", async (req, res) => {
       const query = {};
@@ -44,6 +53,7 @@ async function run() {
     // get specific bikes category data from database
     app.get("/allbikes/:id", async (req, res) => {
       const id = req.params.id;
+      console.log(id);
       const query = { _id: ObjectId(id) };
       const result = await bikesCollections.findOne(query);
       res.send(result);
@@ -89,8 +99,29 @@ async function run() {
     });
     // create api for add a product
     app.post("/dashboard/addproduct", async (req, res) => {
-      const user = req.body;
-      const result = await addProductCollections.insertOne(user);
+      const product = req.body;
+      const result = await addProductCollections.insertOne(product);
+      const brand = product.brandName;
+      const filter = { bikesData: { $elemMatch: { brandName: brand } } };
+      // const options = { upsert: true };
+      const { name, location, brandName, phone, description, image, price } =
+        product;
+      const updatedDoc = {
+        $push: {
+          bikesData: {
+            name: name,
+            location: location,
+            brandName: brandName,
+            phone: phone,
+            pic: image,
+            resalePrice: price,
+          },
+        },
+      };
+      const updatedResult = await bikesCollections.updateOne(
+        filter,
+        updatedDoc
+      );
       // console.log(result);
       res.send(result);
     });
@@ -158,28 +189,6 @@ async function run() {
       const query = {};
       const result = await reportedItemsCollections.find(query).toArray();
       console.log(result);
-      res.send(result);
-    });
-    app.delete("/dashboard/reporteditems/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: ObjectId(id) };
-      const result = await reportedItemsCollections.deleteOne(query);
-      res.send(result);
-    });
-    // get the yamaha collection
-    app.get("/allbikes/brands/yamaha", async (req, res) => {
-      const query = { bikesData: { $elemMatch: { brandName: "Yamaha" } } };
-      const result = await bikesCollections.find(query).toArray();
-      res.send(result);
-    });
-    app.get("/allbikes/brands/kawasaki", async (req, res) => {
-      const query = { bikesData: { $elemMatch: { brandName: "Kawasaki" } } };
-      const result = await bikesCollections.find(query).toArray();
-      res.send(result);
-    });
-    app.get("/allbikes/brands/suzuki", async (req, res) => {
-      const query = { bikesData: { $elemMatch: { brandName: "Suzuki" } } };
-      const result = await bikesCollections.find(query).toArray();
       res.send(result);
     });
   } finally {
