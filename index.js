@@ -22,28 +22,18 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const bikesCollections = client
-      .db("bikesDatabase")
-      .collection("allBikesCollection");
-    const usersCollections = client.db("bikesDatabase").collection("users");
+      .db("databaseAss12")
+      .collection("allProducts");
+    const usersCollections = client.db("databaseAss12").collection("users");
     const addProductCollections = client
-      .db("bikesDatabase")
+      .db("databaseAss12")
       .collection("addproducts");
     const advertiseProductCollections = client
-      .db("bikesDatabase")
+      .db("databaseAss12")
       .collection("advertiseProducts");
     const reportedItemsCollections = client
-      .db("bikesDatabase")
+      .db("databaseAss12")
       .collection("reportedProducts");
-    const yamahaCollections = client
-      .db("bikesDatabase")
-      .collection("yamahaCollection");
-    const kawasakiCollections = client
-      .db("bikesDatabase")
-      .collection("kawasakiCollection");
-    const suzukiCollections = client
-      .db("bikesDatabase")
-      .collection("suzukiCollection");
-    // get all bikes data from database
     app.get("/allbikes", async (req, res) => {
       const query = {};
       const cursor = await bikesCollections.find(query);
